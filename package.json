@@ -1,0 +1,15 @@
+{
+  "name": "crowler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "crowler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "carlos.bahia@meliuz.com.br",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "crawler": "^1.2.0"
+  }
+}
