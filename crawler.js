@@ -1,43 +1,40 @@
 const axios = require('axios');
 const Crawler = require("crawler");
-const File = require('fs');
+const fs = require('fs');
 
 let domains = [];
-const listDomains = ['https://www.google.com.br','https://www.meliuz.com.br','https://www.saraiva.com.br'];
-
 
 function writeFile(text) {
-  File.writeFile("\/home\/carlos\/Desktop\/crawler\/meuarquivo.txt", text, function(erro) {
-
+  fs.appendFile("/Users/cbahia/my-projects/crawler/meuarquivo.json", text, function(erro) {
       if(erro) {
           throw erro;
       }
 
-      console.log("Arquivo salvo");
+      // console.log("Arquivo salvo");
   });
 }
 // Make a request for a user with a given ID
 function getContext(url) {
     axios.get(url)
     .then(function (response) {
-      const obj = {
-        body: response.data,
-      };
-      domains.push(obj);
-      // handle success
-      console.log(`${url} coletado.`);
-      // console.log(response.data););
-      writeFile(domains);
+      response.data.pageProps.tickers.forEach(ticker => {
+        const obj = {
+          ticker: ticker.symbol.toUpperCase(),
+          company_name: ticker.company
+        };
+        domains.push(obj);
+        console.log(`${ticker.symbol} adicionado.`);
+      });
     })
     .catch(function (error) {
       const obj = {
         body: '',
       };
-      domains.push(obj);
+      // domains.push(obj);
       // handle success
       console.log(`${url} error.`);
       // console.log(response.data);
-      writeFile(JSON.parse(domains));
+      writeFile(`${JSON.parse(obj)},`);
     });
 }
 
@@ -47,4 +44,22 @@ function mapDomains(list) {
   });
 }
 
-mapDomains(listDomains);
+
+init() 
+
+async function init() {
+  for (var i = 1; i < 72; i++) {
+    console.log(`page ${i}`);
+    const listDomains = [`https://www.genialinvestimentos.com.br/_next/data/Rquxf79XYEjImsTyP-9zi/onde-investir/renda-variavel/acoes/listagem-de-acoes/page/${i}.json`];
+    mapDomains(listDomains);
+    await sleep(4000);
+    // more statements
+ }
+ writeFile(JSON.stringify(domains));
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
